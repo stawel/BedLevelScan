@@ -10,7 +10,7 @@ import parse_points
 
 file_name = "points.txt"
 
-X,Y,Z = parse_points.parse_file(file_name, Z_min=-0.7)
+X,Y,Z = parse_points.parse_file(file_name, Z_min=-0.8)
 
 ###### display 
 
