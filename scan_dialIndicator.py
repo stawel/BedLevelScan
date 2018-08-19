@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import serial
 import time
+import dialIndicator
 
 port = "/dev/ttyUSB0"
 baudrate = 250000
@@ -9,14 +10,13 @@ ser = serial.Serial(port, baudrate, timeout=5)
 X_max = 320             # X dimension in mm
 X_min = 0
 Y_max = 308             # Y dimension in mm
-Y_min = 0
-X_res = 100             # X resolution
-Y_res = 100             # Y resolution
+Y_min = 38
+X_res = 100
+Y_res = 100
 G38_F = 1000            # G38 feedrate (probe)
 G1_F = 6000             # G1 feedrate (move)
-Z_max = 1               # Z maximum position
-Z_min = -1              # Z minimum position
-G38 = "G38.3"           # G38 command
+Z_max = 6.5             # Z maximum position
+Z_min = 5               # Z minimum position
 
 zigzag_order = True
 output_file = "points.txt"
@@ -73,12 +73,11 @@ def d(s):
 
 def get_point(x,y):
     G1(x, y, Z_max)
-    #run("M211 S0",  "Disable Software Endstops")
-    run(G38 + " F" + str(G38_F) + " Z" + str(Z_min))
-    w = run("M114")
+    G1(x, y, Z_min)
+    run("M400")
+    z = dialIndicator.get_stable_position()
     G1(x, y, Z_max)
-    #run("M211 S1",  "Enable Software Endstops")
-    return w[0]
+    return z
 
 def main():
     out = open(output_file,"w")
@@ -86,14 +85,14 @@ def main():
     d("init command")
     run("G90", "Set to Absolute Positioning")
     run("G28", "Move to Origin (Home)")
-    run("M211 S0",  "Disable Software Endstops")
+    #run("M211 S0",  "Disable Software Endstops")
     for j in range(0, Y_res):
         for i in range(0, X_res):
             if (j % 2) == 1 and zigzag_order:   ii = X_res-i-1
             else:                               ii = i
             x = X_min + (X_max-X_min) * ii/(X_res-1)
             y = Y_min + (Y_max-Y_min) *  j/(Y_res-1)
-            r = get_point(x, y)
-            out.write(r+"\n")
+            z = get_point(x, y)
+            out.write("X:" + str(x) + " Y:" + str(y) + " Z:" +str(z) + "\n")
 
 main()
