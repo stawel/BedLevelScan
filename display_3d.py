@@ -7,10 +7,12 @@ from matplotlib.ticker import LinearLocator, FormatStrFormatter
 from matplotlib.colors import LightSource
 import numpy as np
 import parse_points
+import sys
 
 file_name = "points.txt"
+if len(sys.argv)>1: file_name = sys.argv[1]
 
-X,Y,Z = parse_points.parse_file(file_name, Z_min=-0.8)
+X,Y,Z = parse_points.parse_file(file_name)#, Z_min=0.)
 
 ###### display 
 
