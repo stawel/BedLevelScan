@@ -85,7 +85,7 @@ def main():
     d("init command")
     run("G90", "Set to Absolute Positioning")
     run("G28", "Move to Origin (Home)")
-    #run("M211 S0",  "Disable Software Endstops")
+    run("M211 S0",  "Disable Software Endstops")
     for j in range(0, Y_res):
         for i in range(0, X_res):
             if (j % 2) == 1 and zigzag_order:   ii = X_res-i-1
@@ -93,6 +93,8 @@ def main():
             x = X_min + (X_max-X_min) * ii/(X_res-1)
             y = Y_min + (Y_max-Y_min) *  j/(Y_res-1)
             z = get_point(x, y)
-            out.write("X:" + str(x) + " Y:" + str(y) + " Z:" +str(z) + "\n")
+            o = "X:" + str(x) + " Y:" + str(y) + " Z:" +str(z) + "\n"
+            print o
+            out.write(o)
 
 main()
