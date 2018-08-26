@@ -11,8 +11,13 @@ X_max = 320             # X dimension in mm
 X_min = 0
 Y_max = 308             # Y dimension in mm
 Y_min = 38
-X_res = 100
-Y_res = 100
+
+#X_res = 100
+#Y_res = 100
+
+X_res = 128
+Y_res = 108
+
 G38_F = 1000            # G38 feedrate (probe)
 G1_F = 6000             # G1 feedrate (move)
 Z_max = 6.5             # Z maximum position
@@ -90,8 +95,8 @@ def main():
         for i in range(0, X_res):
             if (j % 2) == 1 and zigzag_order:   ii = X_res-i-1
             else:                               ii = i
-            x = X_min + (X_max-X_min) * ii/(X_res-1)
-            y = Y_min + (Y_max-Y_min) *  j/(Y_res-1)
+            x = X_min + float(X_max-X_min) * ii/(X_res-1)
+            y = Y_min + float(Y_max-Y_min) *  j/(Y_res-1)
             z = get_point(x, y)
             o = "X:" + str(x) + " Y:" + str(y) + " Z:" +str(z) + "\n"
             print o
